@@ -1,0 +1,76 @@
+name: Build Desktop App
+
+on:
+  repository_dispatch:
+    types: [new-core-release]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest] # Add macos-latest, ubuntu-latest when needed
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "npm"
+
+      - name: Download Payload
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          repo: iwannabebot/citadel
+          file: citadel-payload.zip
+          target: citadel-payload.zip
+          token: ${{ secrets.CITADEL_GIT_TOKEN }}
+
+      - name: Unzip Payload
+        run: |
+          unzip citadel-payload.zip -d payload_temp/
+          # Sync version from monorepo package.json to the build environment
+          VERSION=$(node -p "require('./payload_temp/package.json').version")
+          npm version $VERSION --no-git-tag-version
+          # Move 'out' directory to root
+          mv payload_temp/out .
+          rm -rf payload_temp citadel-payload.zip
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build App (Windows)
+        # The 'if' condition is removed as per the instruction's snippet
+        run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: desktop-v${{ github.run_number }}
+          name: Desktop Release ${{ github.run_number }}
+          files: dist/*.exe
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: citadel-artifacts-${{ matrix.os }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.AppImage
+            dist/*.deb
+            dist/*.snap
+          retention-days: 7

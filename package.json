@@ -1,0 +1,25 @@
+{
+  "name": "@citadel-app/desktop",
+  "version": "1.0.0",
+  "description": "Desktop shell for Citadel Workspace",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "build": "electron-builder --dir",
+    "build:win": "electron-builder --win --x64 --arm64",
+    "build:mac": "electron-builder --mac --universal",
+    "build:mac:arm64": "electron-builder --mac --arm64",
+    "build:mac:x64": "electron-builder --mac --x64",
+    "build:linux": "electron-builder --linux --x64 --arm64",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "@citadel-app/app": "latest",
+    "@citadel-app/core": "latest",
+    "@citadel-app/ui": "latest",
+    "better-sqlite3": "^11.5.0"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  }
+}

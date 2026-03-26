@@ -1,0 +1,65 @@
+appId: com.citadel.app
+productName: Citadel
+directories:
+  output: dist
+  buildResources: resources
+protocols:
+  - name: Citadel Protocol
+    schemes:
+      - citadel
+      - codex
+files:
+  - out/**/*
+  - node_modules/**/*
+  - package.json
+  - resources/**/*
+asarUnpack:
+  - resources/**
+  - node_modules/better-sqlite3/**
+extraResources:
+  - from: out/main/python
+    to: tts-service/src/python
+    filter:
+      - "**/*"
+      - "!**/*.onnx"
+      - "!**/*.json"
+      - "!**/*.npz"
+win:
+  executableName: Citadel
+  icon: resources/icon.png
+  forceCodeSigning: false
+  target: portable
+portable:
+  artifactName: "${name}-${version}-${arch}-portable.${ext}"
+nsis:
+  artifactName: "${name}-${version}-${arch}-setup.${ext}"
+  shortcutName: "${productName}"
+  uninstallDisplayName: "${productName}"
+  createDesktopShortcut: always
+mac:
+  target:
+    - target: dmg
+      arch:
+        - universal
+        - arm64
+        - x64
+  icon: resources/icon.icns
+  category: public.app-category.developer-tools
+  entitlementsInherit: resources/entitlements.mac.plist
+  extendInfo:
+    NSCameraUsageDescription: Application requests access to the device's camera.
+    NSMicrophoneUsageDescription: Application requests access to the device's microphone.
+    NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+dmg:
+  artifactName: "${name}-${version}-${arch}.${ext}"
+linux:
+  icon: resources/icon.png
+  target:
+    - AppImage
+    - deb
+  maintainer: electronjs.org
+  category: Utility
+appImage:
+  artifactName: "${name}-${version}-${arch}.${ext}"
+npmRebuild: false
