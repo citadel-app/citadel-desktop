@@ -44,12 +44,15 @@ jobs:
           token: ${{ secrets.CITADEL_RELEASE_TOKEN }}
 
       - name: Unzip Payload
+        shell: bash
         run: |
-          unzip citadel-payload.zip -d payload_temp/
+          mkdir -p payload_temp
+          unzip -o citadel-payload.zip -d payload_temp/
           # Sync version from monorepo package.json to the build environment
           VERSION=$(node -p "require('./payload_temp/package.json').version")
           npm version $VERSION --no-git-tag-version
           # Move 'out' directory to root
+          rm -rf out
           mv payload_temp/out .
           rm -rf payload_temp citadel-payload.zip
 
