@@ -59,13 +59,15 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
+          CITADEL_RELEASE_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
 
       - name: Build App (Windows)
         # The 'if' condition is removed as per the instruction's snippet
         run: npm run build
         env:
-          GH_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
+          MAIN_VITE_GITHUB_CLIENT_ID: ${{ secrets.CITADEL_GITHUB_CLIENT_ID}}
+          GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
+          CITADEL_RELEASE_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
