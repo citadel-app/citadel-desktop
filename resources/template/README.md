@@ -23,7 +23,7 @@
 
 ### Open in Citadel
 
-1. **Download** [Citadel](https://github.com/citadel-app/codex/releases/latest) (portable executable, no installation needed)
+1. **Download** [Citadel](https://github.com/citadel-app/citadel-desktop/releases/latest) (portable executable, no installation needed)
 2. **Launch** the app and sign in with GitHub
 3. **Choose** "Clone Repository Here" or paste the deep-link in your browser: `citadel://clone?url={{CLONE_URL}}`
 
