@@ -14,7 +14,7 @@ on:
         required: true
         default: 'citadel-payload.zip'
       version:
-        description: 'Release version/tag (e.g. latest, tags/v1.0.0)'
+        description: 'Release version/tag (e.g. latest, tags/v1.0.1)'
         required: true
         default: 'latest'
 
@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
 
       - name: Download Payload
         uses: dsaltares/fetch-gh-release-asset@master
@@ -59,6 +59,8 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
         env:
+          NODE_AUTH_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
           CITADEL_RELEASE_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
 
       - name: Build App (Windows)
@@ -68,6 +70,7 @@ jobs:
           MAIN_VITE_GITHUB_CLIENT_ID: ${{ secrets.CITADEL_GITHUB_CLIENT_ID}}
           GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
           CITADEL_RELEASE_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
