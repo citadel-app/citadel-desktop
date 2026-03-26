@@ -65,7 +65,7 @@ jobs:
 
       - name: Build App (Windows)
         # The 'if' condition is removed as per the instruction's snippet
-        run: npm run build
+        run: npm run build:win
         env:
           MAIN_VITE_GITHUB_CLIENT_ID: ${{ secrets.CITADEL_GITHUB_CLIENT_ID}}
           GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
@@ -75,14 +75,13 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          token: ${{ secrets.CITADEL_RELEASE_TOKEN }}
           tag_name: desktop-v${{ github.run_number }}
           name: Desktop Release ${{ github.run_number }}
           files: dist/*.exe
           generate_release_notes: true
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
