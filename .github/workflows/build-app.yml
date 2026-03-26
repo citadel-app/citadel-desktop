@@ -28,7 +28,7 @@ jobs:
           repo: iwannabebot/citadel
           file: citadel-payload.zip
           target: citadel-payload.zip
-          token: ${{ secrets.CITADEL_GIT_TOKEN }}
+          token: ${{ secrets.CITADEL_RELEASE_TOKEN }}
 
       - name: Unzip Payload
         run: |
