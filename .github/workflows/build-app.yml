@@ -4,6 +4,19 @@ on:
   repository_dispatch:
     types: [new-core-release]
   workflow_dispatch:
+    inputs:
+      payload_repo:
+        description: 'Repository to fetch payload from'
+        required: true
+        default: 'citadel-app/citadel'
+      payload_file:
+        description: 'Payload zip file name'
+        required: true
+        default: 'citadel-payload.zip'
+      version:
+        description: 'Release version/tag (e.g. latest, tags/v1.0.0)'
+        required: true
+        default: 'latest'
 
 jobs:
   build:
@@ -25,8 +38,9 @@ jobs:
       - name: Download Payload
         uses: dsaltares/fetch-gh-release-asset@master
         with:
-          repo: citadel-app/citadel
-          file: citadel-payload.zip
+          repo: ${{ github.event.inputs.payload_repo || 'citadel-app/citadel' }}
+          version: ${{ github.event.inputs.version || 'latest' }}
+          file: ${{ github.event.inputs.payload_file || 'citadel-payload.zip' }}
           target: citadel-payload.zip
           token: ${{ secrets.CITADEL_RELEASE_TOKEN }}
 
