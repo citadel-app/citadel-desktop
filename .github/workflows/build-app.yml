@@ -50,7 +50,7 @@ jobs:
           unzip -o citadel-payload.zip -d payload_temp/
           # Sync version from monorepo package.json to the build environment
           VERSION=$(node -p "require('./payload_temp/package.json').version")
-          npm version $VERSION --no-git-tag-version
+          npm version $VERSION --no-git-tag-version --allow-same-version
           # Move 'out' directory to root
           rm -rf out
           mv payload_temp/out .
