@@ -10,9 +10,12 @@ protocols:
       - codex
 files:
   - out/**/*
-  - node_modules/**/*
   - package.json
   - resources/**/*
+  - "!node_modules"
+  - "!src"
+  - "!.git"
+  - "!.github"
 asarUnpack:
   - resources/**
   - node_modules/better-sqlite3/**
