@@ -5,25 +5,22 @@ on:
     types: [new-core-release]
   workflow_dispatch:
     inputs:
-      payload_repo:
-        description: 'Repository to fetch payload from'
-        required: true
-        default: 'citadel-app/citadel'
-      payload_file:
-        description: 'Payload zip file name'
-        required: true
-        default: 'citadel-payload.zip'
       version:
-        description: 'Release version/tag (e.g. latest, tags/v1.0.6)'
-        required: true
-        default: 'latest'
+        description: 'Override release version/tag (optional, e.g. 1.0.6)'
+        required: false
+      draft:
+        description: 'Create as draft?'
+        type: boolean
+        default: true
 
 jobs:
   build:
+    name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [windows-latest] # Add macos-latest, ubuntu-latest when needed
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
       - name: Checkout Code
@@ -33,17 +30,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
-      - name: Download Payload
+      - name: Download Core Payload
         uses: dsaltares/fetch-gh-release-asset@master
         with:
-          repo: ${{ github.event.inputs.payload_repo || 'citadel-app/citadel' }}
+          repo: 'citadel-app/citadel'
           version: ${{ github.event.inputs.version || 'latest' }}
-          file: ${{ github.event.inputs.payload_file || 'citadel-payload.zip' }}
+          file: 'citadel-payload.zip'
           target: citadel-payload.zip
           token: ${{ secrets.CITADEL_RELEASE_TOKEN }}
 
-      - name: Unzip Payload
+      - name: Prepare Payload
         shell: bash
         run: |
           mkdir -p payload_temp
@@ -57,31 +55,23 @@ jobs:
           rm -rf payload_temp citadel-payload.zip
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install --legacy-peer-deps --no-package-lock
         env:
           NODE_AUTH_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
+
+      - name: Build App
+        env:
+          MAIN_VITE_GITHUB_CLIENT_ID: ${{ secrets.CITADEL_GITHUB_CLIENT_ID }}
           GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
-          CITADEL_RELEASE_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
-
-      - name: Build App (Windows)
-        # The 'if' condition is removed as per the instruction's snippet
-        run: npm run build:win
-        env:
-          MAIN_VITE_GITHUB_CLIENT_ID: ${{ secrets.CITADEL_GITHUB_CLIENT_ID}}
-          GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
-          CITADEL_RELEASE_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
-          NODE_AUTH_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          token: ${{ secrets.CITADEL_RELEASE_TOKEN }}
-          tag_name: desktop-v${{ github.run_number }}
-          name: Desktop Release ${{ github.run_number }}
-          files: dist/*.exe
-          generate_release_notes: true
-          draft: false
-          prerelease: false
+        run: |
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            npm run build:win
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            npm run build:mac
+          else
+            npm run build:linux
+          fi
+        shell: bash
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -89,8 +79,44 @@ jobs:
           name: citadel-artifacts-${{ matrix.os }}
           path: |
             dist/*.exe
+            dist/*.setup.exe
             dist/*.dmg
             dist/*.AppImage
             dist/*.deb
-            dist/*.snap
-          retention-days: 7
+            dist/*.zip
+            dist/*.blockmap
+          retention-days: 1
+
+  release:
+    name: Create Cross-Platform Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          pattern: citadel-artifacts-*
+          merge-multiple: true
+
+      - name: Get Version
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create or Update Draft Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.CITADEL_RELEASE_TOKEN }}
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: ${{ steps.get_version.outputs.VERSION }}
+          files: release-assets/*
+          draft: true
+          prerelease: false
+          generate_release_notes: true
