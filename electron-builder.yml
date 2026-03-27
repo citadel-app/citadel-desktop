@@ -17,15 +17,15 @@ asarUnpack:
   - resources/**
   - node_modules/better-sqlite3/**
 extraResources:
-  - from: out/main/python
-    to: tts-service/src/python
+  - from: out/main/icons
+    to: icons
     filter:
       - "**/*"
       - "!**/*.onnx"
       - "!**/*.json"
       - "!**/*.npz"
 win:
-  executableName: citadel
+  executableName: Citadel
   icon: resources/icon.png
   forceCodeSigning: false
   target: portable
@@ -46,6 +46,9 @@ mac:
   icon: resources/icon.icns
   category: public.app-category.developer-tools
   entitlementsInherit: resources/entitlements.mac.plist
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  notarize: false
   extendInfo:
     NSCameraUsageDescription: Application requests access to the device's camera.
     NSMicrophoneUsageDescription: Application requests access to the device's microphone.
@@ -54,12 +57,13 @@ mac:
 dmg:
   artifactName: "citadel-${version}-${arch}.${ext}"
 linux:
-  icon: resources/icon.png
+  executableName: citadel
   target:
-    - AppImage
-    - deb
-  maintainer: electronjs.org
+    - target: AppImage
+    - target: deb
+  maintainer: citadel-app
   category: Utility
+  artifactName: "citadel-${version}-${arch}.${ext}"
 appImage:
   artifactName: "citadel-${version}-${arch}.${ext}"
 npmRebuild: false
