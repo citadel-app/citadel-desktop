@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Override release version/tag (optional, e.g. 1.1.0)'
+        description: 'Override release version/tag (optional, e.g. 1.1.1)'
         required: false
       draft:
         description: 'Create as draft?'
@@ -28,6 +28,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Generate Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -40,7 +47,7 @@ jobs:
           version: ${{ github.event.inputs.version || 'latest' }}
           file: 'citadel-payload.zip'
           target: citadel-payload.zip
-          token: ${{ secrets.CITADEL_RELEASE_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Prepare Payload
         shell: bash
@@ -58,12 +65,13 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps --no-package-lock
         env:
-          CITADEL_RELEASE_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
+          CITADEL_RELEASE_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Build App
         env:
           MAIN_VITE_GITHUB_CLIENT_ID: ${{ secrets.CITADEL_GITHUB_CLIENT_ID }}
-          GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          CITADEL_RELEASE_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
             npm run build:win
@@ -98,6 +106,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Generate Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
@@ -114,7 +129,7 @@ jobs:
       - name: Create or Update Draft Release
         uses: softprops/action-gh-release@v2
         with:
-          token: ${{ secrets.CITADEL_RELEASE_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           tag_name: v${{ steps.get_version.outputs.VERSION }}
           name: ${{ steps.get_version.outputs.VERSION }}
           files: release-assets/*
