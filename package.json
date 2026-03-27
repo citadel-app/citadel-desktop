@@ -1,6 +1,6 @@
 {
   "name": "@citadel-app/desktop",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "description": "Desktop shell for Citadel Workspace",
   "main": "./out/main/index.js",
   "scripts": {
@@ -13,9 +13,9 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "@citadel-app/app": "^1.1.2",
-    "@citadel-app/core": "^1.1.2",
-    "@citadel-app/ui": "^1.1.2",
+    "@citadel-app/app": "^1.1.4",
+    "@citadel-app/core": "^1.1.4",
+    "@citadel-app/ui": "^1.1.4",
     "better-sqlite3": "^11.5.0",
     "electron-updater": "^6.3.9"
   },
