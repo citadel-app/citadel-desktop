@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Override release version/tag (optional, e.g. 1.0.7)'
+        description: 'Override release version/tag (optional, e.g. 1.0.8)'
         required: false
       draft:
         description: 'Create as draft?'
@@ -31,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
 
       - name: Download Core Payload
         uses: dsaltares/fetch-gh-release-asset@master
