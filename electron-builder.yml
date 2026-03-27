@@ -1,5 +1,10 @@
 appId: com.citadel.app
 productName: Citadel
+publish:
+  provider: github
+  owner: citadel-app
+  repo: citadel-desktop
+  releaseType: draft
 directories:
   output: dist
   buildResources: resources
