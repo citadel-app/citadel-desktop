@@ -80,14 +80,14 @@ jobs:
             local size_mb=$(echo "scale=0; $size_bytes / 1048576" | bc)
             
             # Determine emoji and platform label
-            local icon=""
+            local label=""
             case "$os" in
-              windows) icon="🪟" ;;
-              macos)   icon="🍎" ;;
-              linux)   icon="🐧" ;;
+              windows) icon="🪟"; label="Windows" ;;
+              macos)   icon="🍎"; label="macOS" ;;
+              linux)   icon="🐧"; label="Linux" ;;
             esac
             
-            echo "| ${icon} **${os^}** | ${arch} | [${name}](${BASE_URL}/${name}) | ${size_mb} MB |"
+            echo "| ${icon} **${label}** | ${arch} | [${name}](${BASE_URL}/${name}) | ${size_mb} MB |"
           }
 
           # Process each asset from the release
@@ -101,8 +101,6 @@ jobs:
               generate_row "$name" "windows" "$arch" "$size"
             done
 
-            echo ""
-
             # macOS
             jq -r '.[] | select(.name | test("\\.dmg$")) | "\(.name)\t\(.size)"' /tmp/assets.json | sort | while IFS=$'\t' read -r name size; do
               arch="Universal"
@@ -110,8 +108,6 @@ jobs:
               [[ "$name" == *"x64"* ]] && arch="Intel"
               generate_row "$name" "macos" "$arch" "$size"
             done
-
-            echo ""
 
             # Linux
             jq -r '.[] | select(.name | test("\\.(AppImage|deb)$")) | "\(.name)\t\(.size)"' /tmp/assets.json | sort | while IFS=$'\t' read -r name size; do

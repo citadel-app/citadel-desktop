@@ -29,11 +29,9 @@ Choose the installer for your platform. All binaries are unsigned — you may ne
 | 🪟 **Windows** | ARM64 | [citadel-1.1.4-arm64-portable.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-arm64-portable.exe) | 127 MB |
 | 🪟 **Windows** | x64 | [citadel-1.1.4-portable.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-portable.exe) | 248 MB |
 | 🪟 **Windows** | x64 | [citadel-1.1.4-x64-portable.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-x64-portable.exe) | 121 MB |
-
-| 🍎 **Macos** | Apple Silicon | [citadel-1.1.4-arm64.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-arm64.dmg) | 158 MB |
-| 🍎 **Macos** | Universal | [citadel-1.1.4-universal.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-universal.dmg) | 235 MB |
-| 🍎 **Macos** | Intel | [citadel-1.1.4-x64.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-x64.dmg) | 162 MB |
-
+| 🍎 **macOS** | Apple Silicon | [citadel-1.1.4-arm64.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-arm64.dmg) | 158 MB |
+| 🍎 **macOS** | Universal | [citadel-1.1.4-universal.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-universal.dmg) | 235 MB |
+| 🍎 **macOS** | Intel | [citadel-1.1.4-x64.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-x64.dmg) | 162 MB |
 | 🐧 **Linux** | x86_64 (deb) | [citadel-1.1.4-amd64.deb](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-amd64.deb) | 122 MB |
 | 🐧 **Linux** | ARM64 (AppImage) | [citadel-1.1.4-arm64.AppImage](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-arm64.AppImage) | 163 MB |
 | 🐧 **Linux** | ARM64 (deb) | [citadel-1.1.4-arm64.deb](https://github.com/citadel-app/citadel-desktop/releases/download/v1.1.4/citadel-1.1.4-arm64.deb) | 118 MB |
