@@ -36,7 +36,9 @@ win:
   executableName: Citadel
   icon: resources/icon.png
   forceCodeSigning: false
-  target: portable
+  target:
+    - nsis
+    - portable
 portable:
   artifactName: "citadel-${version}-${arch}-portable.${ext}"
 nsis:

@@ -43,7 +43,8 @@ Choose the installer for your platform. All binaries are unsigned — you may ne
 
 | Platform | Recommended | Notes |
 |:---------|:------------|:------|
-| **Windows** | `portable.exe` | No installation required — just download and run |
+| **Windows** | `portable.exe` | No installation required, just download and run |
+| **Windows** | `setup.exe` | NSIS based installer |
 | **macOS (Apple Silicon)** | `arm64.dmg` | For M1/M2/M3/M4 Macs |
 | **macOS (Intel)** | `x64.dmg` | For older Intel-based Macs |
 | **macOS (Universal)** | `universal.dmg` | Works on both Apple Silicon and Intel |
