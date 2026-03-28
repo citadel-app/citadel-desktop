@@ -1,0 +1,189 @@
+name: Update README Installers
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Generate Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: citadel-app
+
+      - name: Get Release Data
+        id: release
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # Fetch the latest published (non-draft) release
+          RELEASE_JSON=$(gh api repos/${{ github.repository }}/releases/latest 2>/dev/null || echo "{}")
+          TAG=$(echo "$RELEASE_JSON" | jq -r '.tag_name // empty')
+          
+          if [ -z "$TAG" ]; then
+            echo "No published release found. Exiting."
+            exit 0
+          fi
+          
+          VERSION="${TAG#v}"
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "TAG=$TAG" >> $GITHUB_OUTPUT
+          
+          # Save assets JSON for the next step
+          echo "$RELEASE_JSON" | jq -r '.assets' > /tmp/assets.json
+          echo "Found release $TAG with $(jq length /tmp/assets.json) assets"
+
+      - name: Generate Installer Table
+        if: steps.release.outputs.VERSION != ''
+        id: table
+        env:
+          VERSION: ${{ steps.release.outputs.VERSION }}
+          TAG: ${{ steps.release.outputs.TAG }}
+        run: |
+          REPO="citadel-app/citadel-desktop"
+          BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
+
+          # Build the markdown table
+          cat > /tmp/installer_table.md << 'HEADER'
+          ### Latest Release: v${VERSION}
+          
+          | Platform | Architecture | Download | Size |
+          |:---------|:-------------|:---------|-----:|
+          HEADER
+
+          # Use envsubst to replace VERSION
+          VERSION="$VERSION" envsubst < /tmp/installer_table.md > /tmp/table_header.md
+
+          # Parse assets and generate rows
+          generate_row() {
+            local name="$1" os="$2" arch="$3" size_bytes="$4"
+            
+            # Skip blockmaps and metadata files
+            case "$name" in *.blockmap|*.yml|*.yaml) return ;; esac
+
+            # Human-readable size
+            local size_mb=$(echo "scale=0; $size_bytes / 1048576" | bc)
+            
+            # Determine emoji and platform label
+            local icon=""
+            case "$os" in
+              windows) icon="🪟" ;;
+              macos)   icon="🍎" ;;
+              linux)   icon="🐧" ;;
+            esac
+            
+            echo "| ${icon} **${os^}** | ${arch} | [${name}](${BASE_URL}/${name}) | ${size_mb} MB |"
+          }
+
+          # Process each asset from the release
+          {
+            cat /tmp/table_header.md
+            
+            # Windows
+            jq -r '.[] | select(.name | test("portable\\.exe$")) | "\(.name)\t\(.size)"' /tmp/assets.json | sort | while IFS=$'\t' read -r name size; do
+              arch="x64"
+              [[ "$name" == *"arm64"* ]] && arch="ARM64"
+              generate_row "$name" "windows" "$arch" "$size"
+            done
+
+            echo ""
+
+            # macOS
+            jq -r '.[] | select(.name | test("\\.dmg$")) | "\(.name)\t\(.size)"' /tmp/assets.json | sort | while IFS=$'\t' read -r name size; do
+              arch="Universal"
+              [[ "$name" == *"arm64"* ]] && arch="Apple Silicon"
+              [[ "$name" == *"x64"* ]] && arch="Intel"
+              generate_row "$name" "macos" "$arch" "$size"
+            done
+
+            echo ""
+
+            # Linux
+            jq -r '.[] | select(.name | test("\\.(AppImage|deb)$")) | "\(.name)\t\(.size)"' /tmp/assets.json | sort | while IFS=$'\t' read -r name size; do
+              arch="x86_64"
+              [[ "$name" == *"arm64"* || "$name" == *"aarch64"* ]] && arch="ARM64"
+              [[ "$name" == *"amd64"* ]] && arch="x86_64"
+              
+              ext="${name##*.}"
+              os_label="linux"
+              generate_row "$name" "$os_label" "${arch} (${ext})" "$size"
+            done
+          } > /tmp/full_table.md
+
+          echo "Generated installer table:"
+          cat /tmp/full_table.md
+
+      - name: Update README
+        if: steps.release.outputs.VERSION != ''
+        run: |
+          # Replace content between marker comments
+          python3 << 'PYTHON'
+          import re
+
+          with open("README.md", "r") as f:
+              readme = f.read()
+
+          with open("/tmp/full_table.md", "r") as f:
+              table = f.read().strip()
+
+          pattern = r"(<!-- INSTALLERS:START -->).*?(<!-- INSTALLERS:END -->)"
+          replacement = f"\\1\n{table}\n\\2"
+          updated = re.sub(pattern, replacement, readme, flags=re.DOTALL)
+
+          with open("README.md", "w") as f:
+              f.write(updated)
+
+          print("README.md updated successfully")
+          PYTHON
+
+      - name: Create Pull Request
+        if: steps.release.outputs.VERSION != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          VERSION="${{ steps.release.outputs.VERSION }}"
+          BRANCH="readme/update-installers-v${VERSION}"
+          
+          git config user.name "citadel-bot[bot]"
+          git config user.email "citadel-bot[bot]@users.noreply.github.com"
+          
+          git checkout -b "$BRANCH"
+          git add README.md
+          
+          if git diff --cached --quiet; then
+            echo "No changes to README.md"
+            exit 0
+          fi
+          
+          git commit -m "docs: update installer links for v${VERSION}"
+          git push origin "$BRANCH" --force
+          
+          # Create PR (or update existing)
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number' 2>/dev/null || echo "")
+          
+          if [ -n "$EXISTING_PR" ]; then
+            echo "PR #${EXISTING_PR} already exists, force-pushed update."
+          else
+            gh pr create \
+              --title "docs: update installer links for v${VERSION}" \
+              --body "Automated update of download links in README.md for release **v${VERSION}**.
+
+          This PR was generated by the \`update-readme\` workflow." \
+              --base main \
+              --head "$BRANCH"
+          fi
