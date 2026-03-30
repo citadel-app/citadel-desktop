@@ -22,20 +22,20 @@
 Choose the installer for your platform. All binaries are unsigned — you may need to allow the app through your OS gatekeeper on first launch.
 
 <!-- INSTALLERS:START -->
-### Latest Release: v1.2.1
+### Latest Release: v1.2.2
 
-| Platform | Architecture | Standalone | Installer | Size |
-|:---------|:-------------|:---------|:---------|-----:|
-| 🪟 **Windows** | ARM64 | [citadel-1.2.1-arm64-portable.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-arm64-portable.exe) | [citadel-1.2.1-arm64-setup.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-arm64-setup.exe) | 116 MB |
-| 🪟 **Windows** | x64 | [citadel-1.2.1-portable.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-portable.exe) | [citadel-1.2.1-setup.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-setup.exe) | 227 MB |
-| 🪟 **Windows** | x64 | [citadel-1.2.1-x64-portable.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-x64-portable.exe) | [citadel-1.2.1-x64-setup.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-x64-setup.exe) | 110 MB |
-| 🍎 **macOS** | Apple Silicon | [citadel-1.2.1-arm64.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-arm64.dmg) |  | 131 MB |
-| 🍎 **macOS** | Universal | [citadel-1.2.1-universal.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-universal.dmg) |  | 208 MB |
-| 🍎 **macOS** | Intel | [citadel-1.2.1-x64.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-x64.dmg) |  | 135 MB |
-| 🐧 **Linux** | x86_64 (deb) | [citadel-1.2.1-amd64.deb](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-amd64.deb) |  | 94 MB |
-| 🐧 **Linux** | ARM64 (AppImage) | [citadel-1.2.1-arm64.AppImage](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-arm64.AppImage) |  | 135 MB |
-| 🐧 **Linux** | ARM64 (deb) | [citadel-1.2.1-arm64.deb](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-arm64.deb) |  | 90 MB |
-| 🐧 **Linux** | x86_64 (AppImage) | [citadel-1.2.1-x86_64.AppImage](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.1/citadel-1.2.1-x86_64.AppImage) |  | 135 MB |
+| Platform | Architecture | Download | Size |
+|:---------|:-------------|:---------|-----:|
+| 🪟 **Windows** | ARM64 | [citadel-1.2.2-arm64-portable.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-arm64-portable.exe) | 116 MB |
+| 🪟 **Windows** | x64 | [citadel-1.2.2-portable.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-portable.exe) | 227 MB |
+| 🪟 **Windows** | x64 | [citadel-1.2.2-x64-portable.exe](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-x64-portable.exe) | 110 MB |
+| 🍎 **macOS** | Apple Silicon | [citadel-1.2.2-arm64.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-arm64.dmg) | 131 MB |
+| 🍎 **macOS** | Universal | [citadel-1.2.2-universal.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-universal.dmg) | 208 MB |
+| 🍎 **macOS** | Intel | [citadel-1.2.2-x64.dmg](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-x64.dmg) | 135 MB |
+| 🐧 **Linux** | x86_64 (deb) | [citadel-1.2.2-amd64.deb](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-amd64.deb) | 94 MB |
+| 🐧 **Linux** | ARM64 (AppImage) | [citadel-1.2.2-arm64.AppImage](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-arm64.AppImage) | 135 MB |
+| 🐧 **Linux** | ARM64 (deb) | [citadel-1.2.2-arm64.deb](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-arm64.deb) | 90 MB |
+| 🐧 **Linux** | x86_64 (AppImage) | [citadel-1.2.2-x86_64.AppImage](https://github.com/citadel-app/citadel-desktop/releases/download/v1.2.2/citadel-1.2.2-x86_64.AppImage) | 135 MB |
 <!-- INSTALLERS:END -->
 
 <details>
