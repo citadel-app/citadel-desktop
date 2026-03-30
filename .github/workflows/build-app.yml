@@ -136,3 +136,4 @@ jobs:
           draft: true
           prerelease: false
           generate_release_notes: true
+          overwrite_files: true
