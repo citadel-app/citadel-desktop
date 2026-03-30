@@ -17,7 +17,15 @@
     "@citadel-app/core": "^1.2.2",
     "@citadel-app/ui": "^1.2.2",
     "better-sqlite3": "^12.6.2",
-    "electron-updater": "^6.8.3"
+    "buffer": "^6.0.3",
+    "chokidar": "^3.6.0",
+    "electron-updater": "^6.8.3",
+    "fs-extra": "^11.3.3",
+    "pdfjs-dist": "^4.10.38",
+    "simple-git": "^3.30.0",
+    "systeminformation": "^5.30.7",
+    "uuid": "^9.0.1",
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "electron": "^33.2.0",
