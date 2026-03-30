@@ -16,8 +16,8 @@
     "@citadel-app/app": "^1.2.1",
     "@citadel-app/core": "^1.2.1",
     "@citadel-app/ui": "^1.2.1",
-    "better-sqlite3": "^11.5.0",
-    "electron-updater": "^6.3.9"
+    "better-sqlite3": "^12.6.2",
+    "electron-updater": "^6.8.3"
   },
   "devDependencies": {
     "electron": "^33.2.0",
