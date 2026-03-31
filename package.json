@@ -13,9 +13,9 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "@citadel-app/app": "^1.2.2",
-    "@citadel-app/core": "^1.2.2",
-    "@citadel-app/ui": "^1.2.2",
+    "@citadel-app/app": "^1.2.3",
+    "@citadel-app/core": "^1.2.3",
+    "@citadel-app/ui": "^1.2.3",
     "better-sqlite3": "^12.6.2",
     "buffer": "^6.0.3",
     "chokidar": "^3.6.0",
